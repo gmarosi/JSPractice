@@ -43,11 +43,25 @@
 
   }
 
+  class Square extends Shape {
+    constructor(sideLength) {
+        super('square', 4, sideLength);
+    }
+
+    calcArea() {
+        console.log(Math.pow(this.sideLength, 2));
+    }
+  }
+
   let square = new Shape('square', 4, 5);
   square.calcPerimeter();
 
   let triangle = new Shape('triangle', 3, 3);
   triangle.calcPerimeter();
+
+  square = new Square(6);
+  square.calcPerimeter();
+  square.calcArea();
 
   </script>
 
