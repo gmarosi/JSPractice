@@ -3,6 +3,8 @@
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 
+const counter = document.querySelector('p');
+
 const width = canvas.width = window.innerWidth;
 const height = canvas.height = window.innerHeight;
 
@@ -164,6 +166,9 @@ while (balls.length < 25) {
     balls.push(ball);
 }
 
+let ballCount = balls.length;
+counter.textContent = `Ball count: ${ballCount}`;
+
 const evilCircle = new EvilCircle(
     random(0 + EVILCIRCLE_SIZE, width - EVILCIRCLE_SIZE),
     random(0 + EVILCIRCLE_SIZE, height - EVILCIRCLE_SIZE)
@@ -184,6 +189,9 @@ function loop() {
     evilCircle.draw();
     evilCircle.checkBounds();
     evilCircle.collisionDetect();
+
+    ballCount = balls.filter(b => b.exists).length;
+    counter.textContent = `Ball count: ${ballCount}`;
 
     requestAnimationFrame(loop);
 }
