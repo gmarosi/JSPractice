@@ -4,6 +4,19 @@ const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 
 const counter = document.querySelector('p');
+const btn = document.querySelector('button');
+btn.addEventListener('click', () => {
+    canvas.className = "is-playing";
+    btn.className = "is-playing";
+    counter.className = "is-playing";
+    game.start(() => {
+        canvas.className = "";
+        btn.className = "";
+        counter.className = "";
+    },
+    25, 
+    10);
+});
 
 const width = canvas.width = window.innerWidth;
 const height = canvas.height = window.innerHeight;
@@ -29,7 +42,7 @@ class Game {
     ballCount;
     
     start(onGameOver, ballCount) {
-        this.onGameOver = onGameOver;
+        this.#onGameOver = onGameOver;
         this.ballCount = ballCount;
         this.#evilCircleSize = 10;
         this.#balls = [];
@@ -68,6 +81,12 @@ class Game {
         this.#evilCircle.draw();
         this.#evilCircle.checkBounds();
         this.evilCollisionDetect();
+
+        if(this.ballCount == 0) {
+            this.#onGameOver();
+            return true;
+        }
+        return false;
     }
 
     ballCollisionDetect(checkedBall) {
@@ -202,11 +221,20 @@ function loop() {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
     ctx.fillRect(0, 0, width, height);
 
-    game.update();
+    const isOver = game.update();
     counter.textContent = `Ball count: ${game.ballCount}`;
+    if(isOver) {
+        return;
+    }
 
     requestAnimationFrame(loop);
 }
 
 const game = new Game();
-game.start(() => true, 25, 10);
+game.start(() => {
+                canvas.className = "";
+                btn.className = "";
+                counter.className = "";
+            },
+            25, 
+            10);

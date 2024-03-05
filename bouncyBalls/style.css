@@ -25,9 +25,41 @@ h1 {
 }
 
 p {
+  display: none;
+}
+
+p.is-playing {
+  display: block;
   position: absolute;
   margin: 0;
   top: 35px;
   right: 5px;
   color: #aaa;
+}
+
+canvas {
+  display: none;
+}
+
+canvas.is-playing {
+  display: block;
+}
+
+form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+button {
+  flex: 1;
+  max-width: 200px;
+  height: 10%;
+  max-height: 100px;
+}
+
+button.isplaying {
+  display: none;
 }
