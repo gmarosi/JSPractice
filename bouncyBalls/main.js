@@ -173,17 +173,21 @@ class EvilCircle extends Shape {
         this.size = 10;
 
         window.addEventListener("keydown", (e) => {
-            switch (e.key) {
-                case "a":
+            switch (e.code) {
+                case "ArrowLeft":
+                case "KeyA":
                     this.x -= this.velX;
                     break;
-                case "d":
+                case "ArrowRight":
+                case "KeyD":
                     this.x += this.velX;
                     break;
-                case "w":
+                case "ArrowUp":
+                case "KeyW":
                     this.y -= this.velY;
                     break;
-                case "s":
+                case "ArrowDown":
+                case "KeyS":
                     this.y += this.velY;
                     break;
             }
