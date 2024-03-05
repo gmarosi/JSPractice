@@ -20,6 +20,86 @@ function randomRGB() {
     return `rgb(${random(0, 255)},${random(0, 255)},${random(0, 255)})`;
 }
 
+class Game {
+    #onGameOver;
+    #balls;
+    #evilCircleSize;
+    #evilCircle;
+    
+    ballCount;
+    
+    start(onGameOver, ballCount) {
+        this.onGameOver = onGameOver;
+        this.ballCount = ballCount;
+        this.#evilCircleSize = 10;
+        this.#balls = [];
+        this.#evilCircle = new EvilCircle(
+            random(0 + this.#evilCircleSize, width - this.#evilCircleSize),
+            random(0 + this.#evilCircleSize, height - this.#evilCircleSize)
+        );
+
+        while (this.#balls.length < this.ballCount) {
+            const size = random(10, 20);
+            const ball = new Ball(
+                // ball position always drawn at least one ball width
+                // away from the edge of the canvas, to avoid drawing errors
+                random(0 + size, width - size),
+                random(0 + size, height - size),
+                random(-7, 7),
+                random(-7, 7),
+                randomRGB(),
+                size
+            );
+        
+            this.#balls.push(ball);
+        }
+        loop();
+    }
+
+    update() {
+        for (const ball of this.#balls) {
+            if (ball.exists) {
+                ball.draw();
+                ball.update();
+                this.ballCollisionDetect(ball);
+            }
+        }
+    
+        this.#evilCircle.draw();
+        this.#evilCircle.checkBounds();
+        this.evilCollisionDetect();
+    }
+
+    ballCollisionDetect(checkedBall) {
+        for (const ball of this.#balls) {
+            if (!(checkedBall === ball) && ball.exists) {
+                const dx = checkedBall.x - ball.x;
+                const dy = checkedBall.y - ball.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < checkedBall.size + ball.size) {
+                    ball.color = checkedBall.color = randomRGB();
+                }
+            }
+        }
+    }
+
+    evilCollisionDetect() {
+        for (const ball of this.#balls) {
+            if (ball.exists) {
+                const dx = this.#evilCircle.x - ball.x;
+                const dy = this.#evilCircle.y - ball.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < this.#evilCircle.size + ball.size) {
+                    ball.exists = false;
+                    this.ballCount--;
+                }
+            }
+        }
+    }
+}
+
 class Shape {
     constructor(x, y, velX, velY) {
         this.x = x;
@@ -65,29 +145,13 @@ class Ball extends Shape {
         this.x += this.velX;
         this.y += this.velY;
     }
-
-    collisionDetect() {
-        for (const ball of balls) {
-            if (!(this === ball) && ball.exists) {
-                const dx = this.x - ball.x;
-                const dy = this.y - ball.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-
-                if (distance < this.size + ball.size) {
-                    ball.color = this.color = randomRGB();
-                }
-            }
-        }
-    }
-
 }
 
-const EVILCIRCLE_SIZE = 10;
 class EvilCircle extends Shape {
     constructor(x, y) {
         super(x, y, 20, 20);
         this.color = 'white';
-        this.size = EVILCIRCLE_SIZE;
+        this.size = 10;
 
         window.addEventListener("keydown", (e) => {
             switch (e.key) {
@@ -132,68 +196,17 @@ class EvilCircle extends Shape {
             this.velY += this.size;
         }
     }
-
-    collisionDetect() {
-        for (const ball of balls) {
-            if (ball.exists) {
-                const dx = this.x - ball.x;
-                const dy = this.y - ball.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-
-                if (distance < this.size + ball.size) {
-                    ball.exists = false;
-                }
-            }
-        }
-    }
 }
-
-const balls = [];
-
-while (balls.length < 25) {
-    const size = random(10, 20);
-    const ball = new Ball(
-        // ball position always drawn at least one ball width
-        // away from the edge of the canvas, to avoid drawing errors
-        random(0 + size, width - size),
-        random(0 + size, height - size),
-        random(-7, 7),
-        random(-7, 7),
-        randomRGB(),
-        size
-    );
-
-    balls.push(ball);
-}
-
-let ballCount = balls.length;
-counter.textContent = `Ball count: ${ballCount}`;
-
-const evilCircle = new EvilCircle(
-    random(0 + EVILCIRCLE_SIZE, width - EVILCIRCLE_SIZE),
-    random(0 + EVILCIRCLE_SIZE, height - EVILCIRCLE_SIZE)
-);
 
 function loop() {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
     ctx.fillRect(0, 0, width, height);
 
-    for (const ball of balls) {
-        if (ball.exists) {
-            ball.draw();
-            ball.update();
-            ball.collisionDetect();
-        }
-    }
-
-    evilCircle.draw();
-    evilCircle.checkBounds();
-    evilCircle.collisionDetect();
-
-    ballCount = balls.filter(b => b.exists).length;
-    counter.textContent = `Ball count: ${ballCount}`;
+    game.update();
+    counter.textContent = `Ball count: ${game.ballCount}`;
 
     requestAnimationFrame(loop);
 }
 
-loop();
+const game = new Game();
+game.start(() => true, 25, 10);
