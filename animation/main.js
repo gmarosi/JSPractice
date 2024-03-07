@@ -14,8 +14,13 @@ const alice2 = document.querySelector("#alice2");
 const alice3 = document.querySelector("#alice3");
 
 // "Callback Hell" implementation
-alice1.animate(aliceTumbling, aliceTiming).finished.then(() => {
-    alice2.animate(aliceTumbling, aliceTiming).finished.then(() => {
-        alice3.animate(aliceTumbling, aliceTiming);
-    })
-});
+// alice1.animate(aliceTumbling, aliceTiming).finished.then(() => {
+//     alice2.animate(aliceTumbling, aliceTiming).finished.then(() => {
+//         alice3.animate(aliceTumbling, aliceTiming);
+//     })
+// });
+
+// Promise chain version
+alice1.animate(aliceTumbling, aliceTiming).finished
+.then(() => alice2.animate(aliceTumbling, aliceTiming).finished)
+.then(() => alice3.animate(aliceTumbling, aliceTiming));
