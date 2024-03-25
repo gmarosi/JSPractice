@@ -10,7 +10,7 @@
 <h1>Image Gallery</h1>
 
 <div class="largeimage">
-    <img src={imgURL} alt="eye">
+    <img src={imgURL} alt="randomly generated image">
 </div>
 
 <ImageBar {selected}/>
