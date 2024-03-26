@@ -11,9 +11,7 @@ export async function load({ fetch }) {
             throw error(500, 'Image fetch request failed');
         }
 
-        resp.blob().then((blob) => {
-            imgs.push(blob);
-        });
+        imgs.push(resp.blob().then((blob) => URL.createObjectURL(blob)));
     }
 
     return {
