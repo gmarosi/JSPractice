@@ -1,10 +1,15 @@
 <script>
     export let imgs;
+    export let selected = 0;
 </script>
 
 <div class="thumbbar">
-    {#each imgs as img}
-        <img src={img} alt="randomly generated" />
+    {#each imgs as img, id}
+        <img
+            src={img} alt="randomly generated"
+            class="{selected === id ? 'selected' : ''}"
+            on:click={() => {selected = id;}}
+        />
     {/each}
 </div>
 
@@ -22,5 +27,10 @@
         max-width: 250px;
         max-height: 250px;
         border: 2px solid black;
+        margin: 0 5px;
+    }
+
+    img.selected {
+        border: 2px solid gold;
     }
 </style>

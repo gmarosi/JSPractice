@@ -11,10 +11,10 @@
 
 <div class="grid">
     <div class="largeimage">
-        <img src={imgs[0]} alt="randomly generated" />
+        <img src={imgs[selected]} alt="randomly generated" />
     </div>
 
-    <ImageBar {imgs}/>
+    <ImageBar {imgs} bind:selected={selected}/>
 </div>
 
 <style>
