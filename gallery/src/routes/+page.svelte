@@ -2,7 +2,7 @@
     import ImageBar from '$lib/ImageBar.svelte';
 
     export let data;
-    const imgURL = URL.createObjectURL(data.img);
+    const imgURL = URL.createObjectURL(data.imgs[0]);
 
     let selected;
 </script>
