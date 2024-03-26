@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
 
-export async function load() {
+export async function load({ fetch }) {
     const imgs = [];
 
     for(let i = 0; i <= 10; i++) {
